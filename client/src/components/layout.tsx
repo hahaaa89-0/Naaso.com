@@ -5,6 +5,7 @@ import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { WhatsAppButton } from "@/components/whatsapp-button"; // Added import
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const cart = useCart();
@@ -159,6 +160,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </footer>
+      <WhatsAppButton phoneNumber="1234567890" /> {/* Added WhatsApp button */}
     </div>
   );
 }

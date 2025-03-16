@@ -34,7 +34,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="relative max-w-5xl mx-auto">
+    <div className="relative w-full">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {images.map((image, index) => (
@@ -42,7 +42,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
               <img
                 src={image.src}
                 alt={image.alt}
-                className="w-full h-[400px] object-cover"
+                className="w-full h-[600px] object-cover"
               />
             </div>
           ))}

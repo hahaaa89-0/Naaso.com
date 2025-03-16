@@ -54,23 +54,25 @@ export function VideoPlayer({ src }: VideoPlayerProps) {
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl p-0 bg-transparent border-0">
-          <Button
-            variant="secondary"
-            size="icon"
-            className="absolute right-4 top-4 z-50 rounded-full bg-white/80 hover:bg-white"
-            onClick={() => setIsModalOpen(false)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-          <video
-            src={src}
-            controls
-            autoPlay
-            className="w-full rounded-lg"
-          >
-            Your browser does not support the video tag.
-          </video>
+        <DialogContent className="max-w-4xl p-0 bg-background border-0">
+          <div className="relative">
+            <Button
+              variant="secondary"
+              size="icon"
+              className="absolute right-2 top-2 z-50 rounded-full bg-white/80 hover:bg-white"
+              onClick={() => setIsModalOpen(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+            <video
+              src={src}
+              controls
+              autoPlay
+              className="w-full rounded-lg"
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
         </DialogContent>
       </Dialog>
     </>
