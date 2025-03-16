@@ -25,30 +25,32 @@ export function VideoPlayer({ src }: VideoPlayerProps) {
 
   return (
     <>
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-md group">
         <video
           ref={videoRef}
           src={src}
-          className="w-full rounded-lg shadow-lg"
+          className="w-full rounded-lg shadow-lg cursor-pointer"
           onClick={() => setIsModalOpen(true)}
         >
           Your browser does not support the video tag.
         </video>
-        <Button
-          variant="secondary"
-          size="icon"
-          className="absolute bottom-4 right-4 rounded-full bg-white/80 hover:bg-white"
-          onClick={(e) => {
-            e.stopPropagation();
-            togglePlay();
-          }}
-        >
-          {isPlaying ? (
-            <Pause className="h-4 w-4" />
-          ) : (
-            <Play className="h-4 w-4" />
-          )}
-        </Button>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Button
+            variant="secondary"
+            size="icon"
+            className="w-16 h-16 rounded-full bg-white/80 hover:bg-white transform transition-transform group-hover:scale-110"
+            onClick={(e) => {
+              e.stopPropagation();
+              togglePlay();
+            }}
+          >
+            {isPlaying ? (
+              <Pause className="h-8 w-8" />
+            ) : (
+              <Play className="h-8 w-8 ml-1" />
+            )}
+          </Button>
+        </div>
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

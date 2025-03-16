@@ -1,12 +1,14 @@
 import { Link } from "wouter";
 import { ShoppingCart, Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCart } from "@/lib/cart";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import { useLanguage } from "@/lib/language";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const cart = useCart();
+  const { language, setLanguage, t } = useLanguage();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -16,16 +18,35 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <h1 className="text-2xl font-bold text-primary">Naaso</h1>
           </Link>
 
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden md:flex items-center space-x-6">
             <Link href="/products">
-              <span className="hover:text-primary">Products</span>
+              <span className="hover:text-primary">{t('nav.products')}</span>
             </Link>
             <Link href="/blog">
-              <span className="hover:text-primary">Blog</span>
+              <span className="hover:text-primary">{t('nav.blog')}</span>
             </Link>
             <Link href="/about">
-              <span className="hover:text-primary">About</span>
+              <span className="hover:text-primary">{t('nav.about')}</span>
             </Link>
+            <div className="flex items-center space-x-2 ml-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={language === 'en' ? 'text-primary' : ''}
+                onClick={() => setLanguage('en')}
+              >
+                EN
+              </Button>
+              <span className="text-muted-foreground">/</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={language === 'np' ? 'text-primary' : ''}
+                onClick={() => setLanguage('np')}
+              >
+                नेपाली
+              </Button>
+            </div>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -88,9 +109,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </SheetTrigger>
               <SheetContent>
                 <nav className="flex flex-col space-y-4 mt-8">
-                  <Link href="/products">Products</Link>
-                  <Link href="/blog">Blog</Link>
-                  <Link href="/about">About</Link>
+                  <Link href="/products">{t('nav.products')}</Link>
+                  <Link href="/blog">{t('nav.blog')}</Link>
+                  <Link href="/about">{t('nav.about')}</Link>
                 </nav>
               </SheetContent>
             </Sheet>
