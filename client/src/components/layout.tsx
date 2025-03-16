@@ -3,10 +3,11 @@ import { ShoppingCart, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCart } from "@/lib/cart";
+import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const cart = useCart();
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b">
@@ -14,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link href="/">
             <h1 className="text-2xl font-bold text-primary">Naaso</h1>
           </Link>
-          
+
           <nav className="hidden md:flex space-x-6">
             <Link href="/products">
               <span className="hover:text-primary">Products</span>
@@ -28,14 +29,56 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Button variant="ghost" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              {cart.items.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">
-                  {cart.items.length}
-                </span>
-              )}
-            </Button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" className="relative">
+                  <ShoppingCart className="h-5 w-5" />
+                  {cart.items.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">
+                      {cart.items.length}
+                    </span>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-lg">
+                <h2 className="text-lg font-semibold mb-4">Shopping Cart</h2>
+                {cart.items.length === 0 ? (
+                  <p className="text-muted-foreground">Your cart is empty</p>
+                ) : (
+                  <div className="space-y-4">
+                    {cart.items.map((item) => (
+                      <div key={item.product.id} className="flex items-center gap-4">
+                        <img
+                          src={item.product.image}
+                          alt={item.product.name}
+                          className="w-16 h-16 object-cover rounded"
+                        />
+                        <div className="flex-1">
+                          <h3 className="font-medium">{item.product.name}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            ${(item.product.price / 100).toFixed(2)} x {item.quantity}
+                          </p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => cart.removeItem(item.product.id)}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                    <div className="pt-4 border-t">
+                      <div className="flex justify-between mb-4">
+                        <span className="font-semibold">Total:</span>
+                        <span>${(cart.total() / 100).toFixed(2)}</span>
+                      </div>
+                      <Button className="w-full">Checkout</Button>
+                    </div>
+                  </div>
+                )}
+              </SheetContent>
+            </Sheet>
 
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
@@ -78,9 +121,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div>
               <h3 className="font-semibold mb-4">Follow Us</h3>
               <div className="flex space-x-4">
-                {/* Add social media links here */}
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                  <FaFacebook className="w-6 h-6 text-primary hover:text-primary/80" />
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                  <FaInstagram className="w-6 h-6 text-primary hover:text-primary/80" />
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+                  <FaYoutube className="w-6 h-6 text-primary hover:text-primary/80" />
+                </a>
               </div>
             </div>
+          </div>
+          <div className="text-center mt-8 text-sm text-muted-foreground">
+            © 2025 Naaso. All rights reserved.
           </div>
         </div>
       </footer>

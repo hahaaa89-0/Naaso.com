@@ -1,6 +1,8 @@
 import { type BlogPost } from "@shared/schema";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { Link } from "wouter";
 
 interface BlogCardProps {
   post: BlogPost;
@@ -27,11 +29,14 @@ export function BlogCard({ post }: BlogCardProps) {
         <h3 className="text-xl font-semibold mt-2">{post.title}</h3>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground mb-4">
           {post.content.length > 150
             ? `${post.content.slice(0, 150)}...`
             : post.content}
         </p>
+        <Link href={`/blog/${post.id}`}>
+          <Button variant="outline" size="sm">Read More</Button>
+        </Link>
       </CardContent>
     </Card>
   );

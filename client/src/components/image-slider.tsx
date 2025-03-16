@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,6 +27,12 @@ export function ImageSlider({ images }: ImageSliderProps) {
     setCurrentIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on('select', onSelect);
+    onSelect();
+  }, [emblaApi, onSelect]);
+
   return (
     <div className="relative max-w-5xl mx-auto">
       <div className="overflow-hidden" ref={emblaRef}>
@@ -42,7 +48,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
           ))}
         </div>
       </div>
-      
+
       <Button
         variant="secondary"
         size="icon"
@@ -51,7 +57,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
-      
+
       <Button
         variant="secondary"
         size="icon"
