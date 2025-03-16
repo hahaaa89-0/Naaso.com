@@ -52,7 +52,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
       <Button
         variant="secondary"
         size="icon"
-        className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 hover:bg-white"
+        className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 hover:bg-white z-10"
         onClick={scrollPrev}
       >
         <ChevronLeft className="h-4 w-4" />
@@ -61,13 +61,13 @@ export function ImageSlider({ images }: ImageSliderProps) {
       <Button
         variant="secondary"
         size="icon"
-        className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 hover:bg-white"
+        className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 hover:bg-white z-10"
         onClick={scrollNext}
       >
         <ChevronRight className="h-4 w-4" />
       </Button>
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         {images.map((_, index) => (
           <div
             key={index}

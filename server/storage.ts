@@ -26,6 +26,7 @@ export class MemStorage implements IStorage {
 
     // Add some initial products
     this.initializeProducts();
+    this.initializeBlogPosts();
   }
 
   private initializeProducts() {
@@ -57,6 +58,31 @@ export class MemStorage implements IStorage {
     ];
 
     initialProducts.forEach(product => this.createProduct(product));
+  }
+
+  private initializeBlogPosts() {
+    const initialPosts: InsertBlogPost[] = [
+      {
+        title: "Spring Honey Harvest Season Begins",
+        content: "As the mountain flowers bloom, our beekeepers prepare for the spring honey harvest. This season promises to be exceptional with the abundance of wildflowers in our region. Learn about our traditional beekeeping methods and what makes our mountain honey special.",
+        image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38",
+        type: "blog",
+      },
+      {
+        title: "Sustainable Farming Update",
+        content: "This month, we've implemented new sustainable farming practices in our apple orchards. By using natural pest control methods and organic fertilizers, we're ensuring our apples remain pesticide-free while maintaining their crisp, sweet taste.",
+        image: "https://images.unsplash.com/photo-1589927986089-35812ab65dde",
+        type: "update",
+      },
+      {
+        title: "Traditional Sattu Making Process",
+        content: "Discover the ancient art of making Sattu, a nutritious flour that's been a staple of our village for generations. We'll take you through our traditional roasting process and explain why our method produces the most flavorful and nutritious Sattu.",
+        image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df",
+        type: "blog",
+      }
+    ];
+
+    initialPosts.forEach(post => this.createBlogPost(post));
   }
 
   async getProducts(): Promise<Product[]> {
