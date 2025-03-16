@@ -23,6 +23,14 @@ export function VideoPlayer({ src }: VideoPlayerProps) {
     }
   };
 
+  const handleCloseModal = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <div className="relative w-full max-w-md group">
@@ -53,22 +61,22 @@ export function VideoPlayer({ src }: VideoPlayerProps) {
         </div>
       </div>
 
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl p-0 bg-background border-0">
-          <div className="relative">
+      <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
+        <DialogContent className="max-w-4xl p-0 bg-transparent border-0">
+          <div className="relative bg-black rounded-lg overflow-hidden">
             <Button
-              variant="secondary"
+              variant="ghost"
               size="icon"
-              className="absolute right-2 top-2 z-50 rounded-full bg-white/80 hover:bg-white"
-              onClick={() => setIsModalOpen(false)}
+              className="absolute right-2 top-2 z-50 bg-white/20 hover:bg-white/40 text-white"
+              onClick={handleCloseModal}
             >
-              <X className="h-4 w-4" />
+              <X className="h-6 w-6" />
             </Button>
             <video
               src={src}
               controls
               autoPlay
-              className="w-full rounded-lg"
+              className="w-full aspect-video"
             >
               Your browser does not support the video tag.
             </video>

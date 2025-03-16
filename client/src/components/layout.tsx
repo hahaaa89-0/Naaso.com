@@ -2,14 +2,47 @@ import { Link } from "wouter";
 import { ShoppingCart, Menu } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { WhatsAppButton } from "@/components/whatsapp-button"; // Added import
+import { WhatsAppButton } from "@/components/whatsapp-button";
+import { CartItem } from "@/components/cart-item";
+import { loadStripe } from "@stripe/stripe-js";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const cart = useCart();
-  const { language, setLanguage, t } = useLanguage();
+  const { toast } = useToast();
+
+  const handleCheckout = async () => {
+    try {
+      const response = await apiRequest("POST", "/api/create-checkout-session", {
+        items: cart.items.map(item => ({
+          id: item.product.id,
+          quantity: item.quantity,
+        }))
+      });
+      const { sessionId } = await response.json();
+
+      const stripe = await stripePromise;
+      if (!stripe) {
+        throw new Error("Stripe failed to load");
+      }
+
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+      if (error) {
+        throw error;
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -21,33 +54,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           <nav className="hidden md:flex items-center space-x-6">
             <Link href="/products">
-              <span className="hover:text-primary">{t('nav.products')}</span>
+              <span className="hover:text-primary">Products</span>
             </Link>
             <Link href="/blog">
-              <span className="hover:text-primary">{t('nav.blog')}</span>
+              <span className="hover:text-primary">Blog</span>
             </Link>
             <Link href="/about">
-              <span className="hover:text-primary">{t('nav.about')}</span>
+              <span className="hover:text-primary">About</span>
             </Link>
-            <div className="flex items-center space-x-2 ml-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={language === 'en' ? 'text-primary' : ''}
-                onClick={() => setLanguage('en')}
-              >
-                EN
-              </Button>
-              <span className="text-muted-foreground">/</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={language === 'np' ? 'text-primary' : ''}
-                onClick={() => setLanguage('np')}
-              >
-                नेपाली
-              </Button>
-            </div>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -68,34 +82,31 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <p className="text-muted-foreground">Your cart is empty</p>
                 ) : (
                   <div className="space-y-4">
-                    {cart.items.map((item) => (
-                      <div key={item.product.id} className="flex items-center gap-4">
-                        <img
-                          src={item.product.image}
-                          alt={item.product.name}
-                          className="w-16 h-16 object-cover rounded"
+                    <div className="max-h-[60vh] overflow-auto">
+                      {cart.items.map((item) => (
+                        <CartItem
+                          key={item.product.id}
+                          product={item.product}
+                          quantity={item.quantity}
+                          onUpdateQuantity={(quantity) => 
+                            cart.updateQuantity(item.product.id, quantity)
+                          }
+                          onRemove={() => cart.removeItem(item.product.id)}
                         />
-                        <div className="flex-1">
-                          <h3 className="font-medium">{item.product.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            ${(item.product.price / 100).toFixed(2)} x {item.quantity}
-                          </p>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => cart.removeItem(item.product.id)}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                     <div className="pt-4 border-t">
                       <div className="flex justify-between mb-4">
                         <span className="font-semibold">Total:</span>
                         <span>${(cart.total() / 100).toFixed(2)}</span>
                       </div>
-                      <Button className="w-full">Checkout</Button>
+                      <Button 
+                        className="w-full" 
+                        onClick={handleCheckout}
+                        disabled={cart.items.length === 0}
+                      >
+                        Proceed to Checkout
+                      </Button>
                     </div>
                   </div>
                 )}
@@ -110,9 +121,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </SheetTrigger>
               <SheetContent>
                 <nav className="flex flex-col space-y-4 mt-8">
-                  <Link href="/products">{t('nav.products')}</Link>
-                  <Link href="/blog">{t('nav.blog')}</Link>
-                  <Link href="/about">{t('nav.about')}</Link>
+                  <Link href="/products">Products</Link>
+                  <Link href="/blog">Blog</Link>
+                  <Link href="/about">About</Link>
                 </nav>
               </SheetContent>
             </Sheet>
@@ -160,7 +171,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </footer>
-      <WhatsAppButton phoneNumber="1234567890" /> {/* Added WhatsApp button */}
+      <WhatsAppButton phoneNumber="1234567890" />
     </div>
   );
 }

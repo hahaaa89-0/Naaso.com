@@ -5,7 +5,6 @@ import { ProductCard } from "@/components/product-card";
 import { BlogCard } from "@/components/blog-card";
 import { ImageSlider } from "@/components/image-slider";
 import { VideoPlayer } from "@/components/video-player";
-import { useLanguage } from "@/lib/language";
 import type { Product, BlogPost } from "@shared/schema";
 
 const farmImages = [
@@ -53,8 +52,6 @@ export default function Home() {
     queryKey: ["/api/posts"],
   });
 
-  const { t } = useLanguage();
-
   return (
     <div>
       {/* Hero Section with Image Slider */}
@@ -63,13 +60,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/40 flex items-center">
           <div className="container mx-auto px-4 text-white">
             <h1 className="text-5xl font-bold mb-4">
-              {t('hero.title')}
+              From Our Village To Your Table
             </h1>
             <p className="text-xl mb-8 max-w-lg">
-              {t('hero.subtitle')}
+              Discover the authentic taste of organic products from our village farms
             </p>
             <Link href="/products">
-              <Button size="lg" className="text-lg px-8">{t('hero.cta')}</Button>
+              <Button size="lg" className="text-lg px-8">Shop Now</Button>
             </Link>
           </div>
         </div>
